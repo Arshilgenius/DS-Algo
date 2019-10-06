@@ -1,99 +1,81 @@
-#include <iostream>
-using namespace std;
-
-class node{
-public:
-    int data ;
-    node* next ;
-
-    node(int d)
-    {
-        data=d;
-        next=NULL;
-    }
-};
-
- node* push(node* head, int size)
-{
-    int data ;
-    while(size!=0)
-    {
-        if(head==NULL)
-        {
-            cin>>data ;
-            node* NewNode = new node(data) ;
-            head=NewNode ;
-            size-- ;
-        }
-        
-        else
-        {
-          cin>>data ;
-          node* NewNode = new node(data) ;
-          NewNode->next=head ;
-          head=NewNode ;
-          size--;
-        }
-        
-    }
-    return head ;
-}
-
-void display(node* head)
-{
-    node* temp = head ;
-    
-    while(temp!=NULL)
-    {
-        cout<<temp->data<<" " ;
-        
-        temp=temp->next ;
-    }
-    return ;
-}
-
-    node* hatao(node* head, int q)
-{
-      node* temp=head ;
-      node* ahead = head->next ;
-    
-    if(q==0)
-    {
-        head=head->next ;
-       // delete(temp) ;
-        return head ;
-    }
-    
-    for(int i=0; i<q; i++)
-    {
-      temp=temp->next ;
-      ahead=ahead->next ;
-    }
-    
-    temp->next=ahead->next ;
-   // delete(ahead) ;  
-    return head ;
-    
-    
-}
-
+#include <stdio.h> 
+#include <stdlib.h> 
+  
+// A linked list node 
+struct Node 
+{ 
+    int data; 
+    struct Node *next; 
+}; 
+  
+/* Given a reference (pointer to pointer) to the head of a list 
+   and an int, inserts a new node on the front of the list. */
+void push(struct Node** head_ref, int new_data) 
+{ 
+    struct Node* new_node = (struct Node*) malloc(sizeof(struct Node)); 
+    new_node->data  = new_data; 
+    new_node->next = (*head_ref); 
+    (*head_ref)    = new_node; 
+} 
+  
+/* Given a reference (pointer to pointer) to the head of a list 
+   and a key, deletes the first occurrence of key in linked list */
+void deleteNode(struct Node **head_ref, int key) 
+{ 
+    // Store head node 
+    struct Node* temp = *head_ref, *prev; 
+  
+    // If head node itself holds the key to be deleted 
+    if (temp != NULL && temp->data == key) 
+    { 
+        *head_ref = temp->next;   // Changed head 
+        free(temp);               // free old head 
+        return; 
+    } 
+  
+    // Search for the key to be deleted, keep track of the 
+    // previous node as we need to change 'prev->next' 
+    while (temp != NULL && temp->data != key) 
+    { 
+        prev = temp; 
+        temp = temp->next; 
+    } 
+  
+    // If key was not present in linked list 
+    if (temp == NULL) return; 
+  
+    // Unlink the node from linked list 
+    prev->next = temp->next; 
+  
+    free(temp);  // Free memory 
+} 
+  
+// This function prints contents of linked list starting from  
+// the given node 
+void printList(struct Node *node) 
+{ 
+    while (node != NULL) 
+    { 
+        printf(" %d ", node->data); 
+        node = node->next; 
+    } 
+} 
+  
+/* Drier program to test above functions*/
 int main() 
-{
-  int n , q , query;
-  node * head=NULL ;
-
- cin>>q;
- cin>>n ;
- 
- head=push(head,n) ;
- 
- while(q!=0)
- {
-    cin>>query ;
-    head=hatao(head,query) ;
-    display(head) ;
-    q-- ;
- }
- 
- return 0;
+{ 
+    /* Start with the empty list */
+    struct Node* head = NULL; 
+  
+    push(&head, 7); 
+    push(&head, 1); 
+    push(&head, 3); 
+    push(&head, 2); 
+  
+    puts("Created Linked List: "); 
+    printList(head); 
+    deleteNode(&head, 1); 
+    puts("\nLinked List after Deletion of 1: "); 
+    printList(head); 
+    return 0; 
 }
